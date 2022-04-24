@@ -1,0 +1,32 @@
+{
+    "subject_sets": [
+        {
+            "subject_set_id": "101039",
+            "subject_set_name": "Crabs and Snails",
+            "location": "Test" 
+        },
+        {   
+            "subject_set_id": "102657",
+            "subject_set_name": "Deans Creek 2015",
+            "location": "Deans Creek"
+        }
+    ],
+
+    "tool_labels": [
+        {
+            "rectangle": [
+                {
+                    "name": "Snails"
+                },
+                {
+                    "name": "Crabs"
+                }
+            ],
+            "circle": [
+                {
+                    "name": "Burrows"
+                }
+            ]
+        }
+    ]
+}

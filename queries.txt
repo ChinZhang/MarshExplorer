@@ -1,0 +1,41 @@
+Requested List of Queries
+
+### Provides all annotations
+SELECT `subject`.`subject_id`, `annotation`.*, `circle`.*, `rectangle`.*
+FROM `subject`
+	LEFT JOIN `annotation` ON `annotation`.`subject_id` = `subject`.`subject_id`
+	LEFT JOIN `circle` ON `circle`.`annotation_id` = `annotation`.`annotation_id`
+	LEFT JOIN `rectangle` ON `rectangle`.`annotation_id` = `annotation`.`annotation_id`;
+
+
+### Provide all annotations by specific subject (image) - replace subject id number with the subject id wanted
+SELECT `subject`.`subject_id`, `annotation`.*, `circle`.*, `rectangle`.*
+FROM `subject`
+	LEFT JOIN `annotation` ON `annotation`.`subject_id` = `subject`.`subject_id`
+	LEFT JOIN `circle` ON `circle`.`annotation_id` = `annotation`.`annotation_id`
+	LEFT JOIN `rectangle` ON `rectangle`.`annotation_id` = `annotation`.`annotation_id`
+WHERE `annotation`.`subject_id` = "71299458";
+
+
+### Provide annotations that are snails
+SELECT `subject`.`image_path`, `annotation`.*, `rectangle`.*
+FROM `subject`
+	LEFT JOIN `annotation` ON `annotation`.`subject_id` = `subject`.`subject_id`
+	LEFT JOIN `rectangle` ON `rectangle`.`annotation_id` = `annotation`.`annotation_id`
+WHERE `rectangle`.`tool_label` = "Snails";
+
+
+### Provide annotations that are burrows
+SELECT `subject`.`image_path`, `annotation`.*, `circle`.*
+FROM `subject`
+	LEFT JOIN `annotation` ON `annotation`.`subject_id` = `subject`.`subject_id`
+	LEFT JOIN `circle` ON `circle`.`annotation_id` = `annotation`.`annotation_id`
+WHERE `circle`.`tool_label` = "Burrows";
+
+
+### Provide annotations that are crabs
+SELECT `subject`.`image_path`, `annotation`.*, `rectangle`.*
+FROM `subject`
+	LEFT JOIN `annotation` ON `annotation`.`subject_id` = `subject`.`subject_id`
+	LEFT JOIN `rectangle` ON `rectangle`.`annotation_id` = `annotation`.`annotation_id`
+WHERE `rectangle`.`tool_label` = "Crabs";

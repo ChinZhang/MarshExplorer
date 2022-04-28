@@ -39,8 +39,8 @@ def parse_sql(filename):
     return statements
 
 
+# Inserting users into user table
 def users_table(cursor):
-    # Inserting users into user table
     users_sql = "INSERT INTO user (user_id, username, expert) VALUES (%s, %s, %s)"
 
     # Setting initial expert status to false (0)
@@ -66,8 +66,8 @@ def users_table(cursor):
             continue
 
 
+# Inserting workflows into workflow table
 def workflows_table(cursor):
-    # Inserting workflows into workflow table
     workflows_sql = "INSERT INTO workflow (workflow_id, workflow_name) VALUES (%s, %s)"
 
     # loop through the dataframe that has the csv file
@@ -85,8 +85,8 @@ def workflows_table(cursor):
             continue
 
 
+# Inserting subject into subject table
 def subjects_table(cursor):
-    # Inserting subject into subject table
     subjects_sql = "INSERT INTO subject (subject_id, image_path, height, width) VALUES (%s, %s, %s, %s)"
     image_path = ""
     height = 0
@@ -111,8 +111,8 @@ def subjects_table(cursor):
             continue
 
 
+# Inserting classifications into classification table
 def classifications_table(cursor):
-    # Inserting classifications into classification table
     classifications_sql = "INSERT INTO classification (classification_id, workflow_id, user_id, date, gold_standard, workflow_version) VALUES (%s, %s, %s, %s, %s, %s)"
 
     # Setting initial gold standard status to false (0)
@@ -208,8 +208,8 @@ def classifications_table(cursor):
             continue
 
 
+# Updating subject set location information
 def subject_set_info(cursor):
-    # Updating subject set location information
     subject_set_sql = "UPDATE subject SET subject_set_id=%s, subject_set_name=%s, location=%s WHERE subject_id=%s"
 
     # Open and load json file for subject sets
@@ -241,8 +241,12 @@ def subject_set_info(cursor):
             continue
 
 
+# Ask user for database username and password
+user = input("Enter your username: ")
+password = input("Enter your password: ")
+
 # Connect to the database
-connection = MySQLdb.connect(host='localhost', user='root', password='')
+connection = MySQLdb.connect(host='localhost', user=user, password=password)
 
 # Use cursor to execute SQL queries for the database
 cursor = connection.cursor()
@@ -262,7 +266,7 @@ if res is None:
 else:
     cursor.execute("USE marshexplorer")
 
-# Call other functions
+# Call other functions to populate table
 users_table(cursor)
 workflows_table(cursor)
 subjects_table(cursor)

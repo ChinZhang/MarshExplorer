@@ -1,5 +1,5 @@
 # MarshExplorer
-Script for loading data extracted from csv files exported from an Zooniverse project, MarshExplorer, into an local MySQL server to collect annotations made by citizen scientists
+Script for loading data extracted from csv files exported from an Zooniverse project, MarshExplorer, into an local MySQL server to collect annotations made by citizen scientists for salt marsh photos
 
 ** These notes are for Windows, commands may differ for Mac
 
@@ -42,8 +42,8 @@ Script for loading data extracted from csv files exported from an Zooniverse pro
 File needs to be edited when:
 1. New subject sets are added on Zooniverse
 - Follow format and add the subject set id (assigned in Zooniverse), subject set name and location
-3. New subjects of interest are added in Zooniverse
+3. New subjects of interest are added on Zooniverse
 - Follow format and add the name of subjects of interest under the corresponding shape
-4. New shapes for annotating are added in Zooniverse
+4. New shapes for annotating are added on Zooniverse
 - Follow format and add the shape along with any subjects of interest being annotated by it
-** Note: code and database needs to be changed to account for any new tool labels (shapes) for annotation
+- **Note: code and database needs to be changed to account for any new tool labels (shapes) for annotation

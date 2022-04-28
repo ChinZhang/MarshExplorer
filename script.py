@@ -1,12 +1,13 @@
 import pymysql
-
 pymysql.install_as_MySQLdb()
 import MySQLdb
 import pandas as pd
 import json
 
+# Reading in csv files and storing them into data frames using pandas
 classifications_df = pd.read_csv('marsh-explorer-classifications.csv')
 subjects_df = pd.read_csv('marsh-explorer-subjects.csv')
+
 
 # Cleaning the sql file to be executed
 def parse_sql(filename):
@@ -43,17 +44,17 @@ def parse_sql(filename):
 def users_table(cursor):
     users_sql = "INSERT INTO user (user_id, username, expert) VALUES (%s, %s, %s)"
 
-    # Setting initial expert status to false (0)
+    # Set initial expert status to false (0)
     expert = 0
 
-    # loop through the dataframe that has the csv file
+    # Loop through the classification dataframe that has the csv file
     for row in classifications_df.itertuples():
 
-        # Getting all user ids from database
+        # Get all user ids from database
         cursor.execute("SELECT user_id FROM user where user_id=%s", row.user_id)
         user_data = cursor.fetchall()
 
-        # Checking if the user is already in database
+        # Check if the user is already in database
         if not user_data:
             # If the expert value is true from csv data
             if row.expert == "TRUE":
@@ -70,14 +71,14 @@ def users_table(cursor):
 def workflows_table(cursor):
     workflows_sql = "INSERT INTO workflow (workflow_id, workflow_name) VALUES (%s, %s)"
 
-    # loop through the dataframe that has the csv file
+    # Loop through the classification dataframe that has the csv file
     for row in classifications_df.itertuples():
 
-        # Getting all workflow ids from database
+        # Get all workflow ids from database
         cursor.execute("SELECT workflow_id FROM workflow where workflow_id=%s", row.workflow_id)
         workflow_data = cursor.fetchall()
 
-        # Checking if the workflow is already in database
+        # Check if the workflow is already in database
         if not workflow_data:
             # Insert the data into the database
             cursor.execute(workflows_sql, (row.workflow_id, row.workflow_name))
@@ -92,15 +93,15 @@ def subjects_table(cursor):
     height = 0
     width = 0
 
-    # loop through the dataframe that has the csv file
+    # Loop through the classification dataframe that has the csv file
     for row in classifications_df.itertuples():
-        # Getting all subject ids from database
+        # Get all subject ids from database
         cursor.execute("SELECT subject_id FROM subject where subject_id=%s", row.subject_ids)
         subject_data = cursor.fetchall()
 
-        # Checking if the subject is already in database
+        # Check if the subject is already in database
         if not subject_data:
-            # Loading in json and parsing it down to filename
+            # Load in json and parse it down to filename
             load_subject_data = json.loads(row.subject_data)
             subject_id_data = load_subject_data[str(row.subject_ids)]
             image_path = subject_id_data['Filename']
@@ -115,15 +116,15 @@ def subjects_table(cursor):
 def classifications_table(cursor):
     classifications_sql = "INSERT INTO classification (classification_id, workflow_id, user_id, date, gold_standard, workflow_version) VALUES (%s, %s, %s, %s, %s, %s)"
 
-    # Setting initial gold standard status to false (0)
+    # Sett initial gold standard status to false (0)
     gold_standard = 0
 
-    # Inserting annotations into annotations, circles and rectangles table
+    # Insert annotations into annotations, circles and rectangles table
     annotations_sql = "INSERT INTO annotation (annotation_id, subject_id, classification_id) VALUES (%s, %s, %s)"
     circles_sql = "INSERT INTO circle (circle_id, annotation_id, tool_label, radius, x, y, angle) VALUES (null, %s, %s, %s, %s, %s, %s)"
     rectangles_sql = "INSERT INTO rectangle (rectangle_id, annotation_id, tool_label, x, y, width, height) VALUES (null, %s, %s, %s, %s, %s, %s)"
 
-    # Initializing annotation_id
+    # Initialize annotation_id
     annotation_id = 0
 
     # Alter Table SQL is only needed if auto_increment needs to be reset to 1 in database
@@ -139,21 +140,21 @@ def classifications_table(cursor):
     if max_annotation_id[0] is None:
         annotation_id = 1
     else:
-        # add one to the current max annotation id
+        # Add one to the current max annotation id
         annotation_id = max_annotation_id[0] + 1
 
     # Open and load json file for tool labels
     marsh_explorer_json = open('marsh_explorer.json')
     marsh_explorer_data = json.load(marsh_explorer_json)
 
-    # loop through the dataframe that has the csv file
+    # Loop through the classification dataframe that has the csv file
     for row in classifications_df.itertuples():
 
-        # Getting all classification ids from database
+        # Get all classification ids from database
         cursor.execute("SELECT classification_id FROM classification where classification_id=%s", row.classification_id)
         classification_data = cursor.fetchall()
 
-        # Checking if the classification is already in database
+        # Check if the classification is already in database
         if not classification_data:
 
             # If the gold standard status is true from csv data
@@ -166,7 +167,7 @@ def classifications_table(cursor):
                 row.classification_id, row.workflow_id, row.user_id, row.created_at, gold_standard,
                 row.workflow_version))
 
-            # Loading in json for annotation data
+            # Load in json for annotation data
             load_annotation_data = json.loads(row.annotations)
 
             # Disable foreign key constraint to allow insertion of data for annotations
@@ -218,14 +219,14 @@ def subject_set_info(cursor):
 
     subject_set_name = "0"
     location = "0"
-    # loop through the dataframe that has the csv file
+    # Loop through the dataframe that has the csv file
     for row in subjects_df.itertuples():
 
-        # Getting all subject ids from database
-        cursor.execute("SELECT subject_id FROM subject where subject_id=%s", (row.subject_id))
+        # Get all subject ids from database
+        cursor.execute("SELECT subject_id FROM subject where subject_id=%s", row.subject_id)
         subject_data = cursor.fetchall()
 
-        # Setting subject set name and location based on the subject set id
+        # Set subject set name and location based on the subject set id
         if subject_data:
 
             # Loop through marsh explorer json to get the subject sets
@@ -257,7 +258,7 @@ res = cursor.fetchone()
 
 # Execute sql file if it exists
 if res is None:
-    # Reading sql statements from sql file and executing
+    # Read sql statements from sql file and execute
     statements = parse_sql('marshexplorer.sql')
     for statement in statements:
         cursor.execute(statement)
@@ -266,7 +267,7 @@ if res is None:
 else:
     cursor.execute("USE marshexplorer")
 
-# Call other functions to populate table
+# Call other functions to populate table and commit
 users_table(cursor)
 workflows_table(cursor)
 subjects_table(cursor)

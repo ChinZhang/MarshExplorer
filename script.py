@@ -217,8 +217,9 @@ def subject_set_info(cursor):
     marsh_explorer_json = open('marsh_explorer.json')
     marsh_explorer_data = json.load(marsh_explorer_json)
 
-    subject_set_name = "0"
-    location = "0"
+    subject_set_name = ""
+    location = ""
+
     # Loop through the dataframe that has the csv file
     for row in subjects_df.itertuples():
 
@@ -231,7 +232,7 @@ def subject_set_info(cursor):
 
             # Loop through marsh explorer json to get the subject sets
             for subject_set in marsh_explorer_data['subject_sets']:
-                # if the subject set id from csv is equal to the json data subject id, set location and subject set name
+                # If the subject set id from csv is equal to the json data subject id, set location and subject set name
                 if row.subject_set_id == int(subject_set['subject_set_id']):
                     subject_set_name = subject_set['subject_set_name']
                     location = subject_set['location']

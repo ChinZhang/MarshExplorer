@@ -2,6 +2,7 @@ import pymysql
 pymysql.install_as_MySQLdb()
 import MySQLdb
 import pandas as pd
+import numpy as np
 import json
 
 # Reading in csv files and storing them into data frames using pandas
@@ -39,6 +40,9 @@ def parse_sql(filename):
             statements.append(line.strip())
     return statements
 
+# Setting not logged in users id and username
+classifications_df['user_id'] = classifications_df['user_id'].replace(np.nan, 0)
+classifications_df.loc[classifications_df['user_name'].str.contains('not-logged-in'), 'user_name'] = 'UnloggedUser'
 
 # Inserting users into user table
 def users_table(cursor):
